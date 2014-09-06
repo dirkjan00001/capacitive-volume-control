@@ -49,8 +49,18 @@
     #define PIN_USI_SCL         PINB7
 #endif
 
+#if defined (__AVR_ATtiny45__)	// not yet implemented
+	#define DDR_USI			DDR
+	#define PORT_USI		PORT
+	#define PIN_USI			PIN
+	#define PORT_USI_SDA	P
+	#define PORT_USI_SCL	P
+	#define PIN_USI_SDA		PIN
+	#define PIN_USI_SCL		PIN
+#endif
+
 //USI I2C Master Transceiver Start
 // Starts the transceiver to send or receive data based on the r/w bit
-char USI_I2C_Master_Transceiver_Start(char *msg, char msg_size);
+char USI_I2C_Master_Start_Transmission(char *msg, char msg_size);
 
 #endif
