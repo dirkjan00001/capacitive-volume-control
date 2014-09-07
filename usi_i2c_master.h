@@ -49,14 +49,14 @@
     #define PIN_USI_SCL         PINB7
 #endif
 
-#if defined (__AVR_ATtiny45__)	// not yet implemented
-	#define DDR_USI			DDR
-	#define PORT_USI		PORT
-	#define PIN_USI			PIN
-	#define PORT_USI_SDA	P
-	#define PORT_USI_SCL	P
-	#define PIN_USI_SDA		PIN
-	#define PIN_USI_SCL		PIN
+#if defined (__AVR_ATtiny45__)
+	#define DDR_USI			DDRB
+	#define PORT_USI		PORTB
+	#define PIN_USI			PINB
+	#define PORT_USI_SDA	PB0
+	#define PORT_USI_SCL	PB2
+	#define PIN_USI_SDA		PINB0
+	#define PIN_USI_SCL		PINB2
 #endif
 
 //USI I2C Master Transceiver Start
