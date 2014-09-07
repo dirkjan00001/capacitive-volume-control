@@ -1,15 +1,3 @@
-/*-------------------------------------*\
-| TinyStepper Unipolar Stepper Driver	|
-| ATTiny2313-based unipolar driver for	|
-| 6-wire or 8-wire stepper motors.		|
-|										|
-| Serial and i2c interface				|
-| 										|
-| Adam Honse (amhb59@mail.mst.edu/		|
-|			  calcprogrammer1@gmail.com)|
-| 3/31/2012								|
-\*-------------------------------------*/
-
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
@@ -23,6 +11,12 @@
 #define status_ledOn()		PORTB |= status_led_pin
 #define status_ledToggle()	PORTB ^= status_led_pin
 
+#define KEY_UP			1
+#define KEY_DOWN		2
+
+char touch_keys_task(unsigned char *keys);
+
+
 void delay_ms(uint16_t ms)
 {
   uint16_t t;
@@ -32,14 +26,14 @@ void delay_ms(uint16_t ms)
 
 void init(){
 	DDRB = status_led_pin;
-
 	status_ledOn();
+
+	delay_ms(500);		// make sure power is stable
 
 	sei();
 
 	i2c_slaves_init();
 
-	delay_ms(500);
 	status_ledOff();
 }
 
@@ -47,18 +41,49 @@ int main()
 {
 	init();
 
+	signed char volume=VOLUME_INIT;
+	unsigned char keys;
+
 	while(1)
 	{
-/*		delay_ms(500);
-		pcf8574_put(pcf_led4);
-		status_ledOn();
+		//pcf8574_task_test();
+		if (touch_keys_task(&keys)){
+			switch(keys){
+			case KEY_UP:
+				if (volume<VOLUME_MAX)
+					volume++;
+				break;
+			case KEY_DOWN:
+				if (volume>VOLUME_MIN)
+					volume--;
+				break;
+			case (KEY_DOWN|KEY_UP):
+				break;
+			}
 
-		delay_ms(500);
-		pcf8574_put(pcf_led1);
-		status_ledOff();*/
-
-
-		unsigned char key = pcf8574_get(0);
-		pcf8574_put(key);
+			volume_set(volume);
+		}
 	}
 }
+
+char touch_keys_task(unsigned char *keys){	// implemented with real keys connected to pcf8574
+	static unsigned char key_ref=0;
+	char result=0;
+	unsigned char key_tmp=0;
+
+	// -------- TODO replace only this code with touch keys -------
+	unsigned char keyPCF = pcf8574_get(0);
+
+	if (keyPCF==pcf_key1)
+		key_tmp = KEY_DOWN;
+	else if (keyPCF==pcf_key4)
+		key_tmp = KEY_UP;
+	// -------------
+
+	if ((key_tmp!=key_ref)&&(key_tmp)) result=1;
+
+	*keys = key_tmp;
+	key_ref = key_tmp;
+	return result;
+}
+

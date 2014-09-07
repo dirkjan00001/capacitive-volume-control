@@ -11,7 +11,17 @@ void i2c_slaves_init(){
 	USICR = (0 << USISIE) | (0 << USIOIE) | (1 << USIWM1) | (0 << USIWM0) | (1 << USICS1) | (0 << USICS0) | (1 << USICLK) | (0 << USITC);
 	USISR = (1 << USISIF) | (1 << USIOIF) | (1 << USIPF)  | (1 << USIDC)  | (0x00 << USICNT0);
 
+	// init slave devices
+	volume_set(VOLUME_INIT);
 }
+
+void volume_set(signed char volume){	// TODO replace all code to control digital volume chip
+	if (volume==0){
+		pcf8574_put(pcf_ledsoff);
+	} else if ((volume>0)&&(volume<5))
+		pcf8574_put((15<<(4-volume)));
+}
+
 
 void pcf8574_put(char leds)
 {
@@ -39,4 +49,16 @@ unsigned char pcf8574_get(unsigned char key_led)
 		ret >>= 4;
 	}
 	return ret;
+}
+
+void pcf8574_task_test(void){
+/*		delay_ms(500);
+		pcf8574_put(pcf_led4);
+		status_ledOn();
+
+		delay_ms(500);
+		pcf8574_put(pcf_led1);
+		status_ledOff();*/
+		unsigned char key = pcf8574_get(0);
+		pcf8574_put(key);
 }

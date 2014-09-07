@@ -9,6 +9,7 @@
 |            -calcprogrammer1@gmail.com                 |
 \*-----------------------------------------------------*/
 
+//TODO add timeout detection to make the software more robust
 #include "usi_i2c_master.h"
 #include <avr/interrupt.h>
 ///////////////////////////////////////////////////////////////////////////////
