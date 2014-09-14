@@ -4,6 +4,7 @@
 #include <avr/eeprom.h>
 
 #include "i2cslaves.h"
+#include "cap_button_driver.h"
 
 #define status_led_pin 	(1<<PB3)
 
@@ -15,7 +16,6 @@
 #define KEY_DOWN		2
 
 char touch_keys_task(unsigned char *keys);
-
 
 void delay_ms(uint16_t ms)
 {
