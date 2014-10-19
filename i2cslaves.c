@@ -20,8 +20,19 @@ void volume_set(signed char volume){	// TODO replace all code to control digital
 		pcf8574_put(pcf_ledsoff);
 	} else if ((volume>0)&&(volume<5))
 		pcf8574_put((15<<(4-volume)));
+
+	PT2257_set_volume(VOLUME_MAX-volume);			// todo prevent overflow
 }
 
+
+void PT2257_set_volume(unsigned char minus_volume){
+	char buffer[3];
+	buffer[0]=PT2257|I2C_WRITE;
+	buffer[1]=PT2257_2_channel_10dB | ((minus_volume/10) & 0x0F);
+	buffer[2]=PT2257_2_channel_1dB  | ((minus_volume%10) & 0x0F);
+
+	USI_I2C_Master_Start_Transmission(buffer, 3);
+}
 
 void pcf8574_put(char leds)
 {

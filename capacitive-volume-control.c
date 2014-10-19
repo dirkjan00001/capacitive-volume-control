@@ -62,6 +62,7 @@ int main()
 			}
 
 			volume_set(volume);
+			delay_ms(100);		// todo remove delay
 		}
 	}
 }

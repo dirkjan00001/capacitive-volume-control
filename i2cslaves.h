@@ -2,12 +2,19 @@
 #define _I2CSLAVES_H   1
 
 #define VOLUME_MIN		0
-#define VOLUME_MAX		4
+#define VOLUME_MAX		79
 #define VOLUME_INIT		3
 
 
 
 #define pcf8574			0x70      			// I/O expander address
+#define PT2257			0x88				// digital volume chip
+
+#define PT2257_2_channel_1dB	0xD0
+#define PT2257_2_channel_10dB	0xE0
+#define PT2257_mute_on			0x79
+#define PT2257_mute_off			0x78
+
 
 #define pcf_led4		0x01
 #define pcf_led3		0x02
@@ -29,6 +36,7 @@
 void i2c_slaves_init();
 
 void volume_set(signed char volume);
+void PT2257_set_volume(unsigned char minus_volume);
 
 void pcf8574_put(char leds);
 unsigned char pcf8574_get(unsigned char key_led);		// 0 for key status, 1 for led status
